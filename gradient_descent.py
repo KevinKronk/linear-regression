@@ -39,13 +39,20 @@ def gradient_descent(x, y, size, theta, alpha, iterations):
     """
 
     cost_history = []
-
+    converge = False
     for i in range(iterations):
         temp_cost = compute_cost(x, y, size, theta)
+        try:
+            if cost_history[-1] - temp_cost <= 0.0001:
+                converge = True
+        except IndexError:
+            pass
         cost_history.append(temp_cost)
 
         delta = (1 / size) * ((np.dot(theta.T, x)) - y) * x
         delta2 = delta.sum(axis=1, keepdims=True)
         theta = (theta - (alpha * delta2))
+    if converge:
+        print("The function converged, use less iterations.")
     print(f"The new optimized parameters are: \n{theta}\n")
     return theta, cost_history
